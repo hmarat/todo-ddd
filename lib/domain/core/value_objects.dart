@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:ddd/domain/core/errors.dart';
 import 'package:ddd/domain/core/failures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -9,6 +10,10 @@ abstract class ValueObject<T> {
   Either<ValueFailure<T>, T> get value;
 
   bool isValid() => value.isRight();
+
+  T getOrCrash() {
+    return value.fold((f) => throw UnexpectedValueError(f), (r) => r);
+  }
 
   @override
   bool operator ==(Object other) {

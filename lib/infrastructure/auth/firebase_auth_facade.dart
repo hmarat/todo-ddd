@@ -32,7 +32,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       );
 
       return right(unit);
-    } on PlatformException catch (err) {
+    } on FirebaseAuthException catch (err) {
       if (err.code == 'email-already-in-use') {
         return left(const AuthFailure.emailAlreadyInUse());
       } else {
@@ -54,7 +54,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       );
 
       return right(unit);
-    } on PlatformException catch (err) {
+    } on FirebaseAuthException catch (err) {
       if (err.code == 'user-not-found' ||
           err.code == 'wrong-password' ||
           err.code == 'invalid-email') {

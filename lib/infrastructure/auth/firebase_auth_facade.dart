@@ -1,15 +1,18 @@
 import 'package:ddd/domain/auth/auth_failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ddd/domain/auth/i_auth_facade.dart';
+import 'package:ddd/domain/auth/user.dart';
 import 'package:ddd/domain/auth/value_objects.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ddd/domain/core/value_objects.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import './firebase_user_mapper.dart';
 
 @LazySingleton(as: IAuthFacade)
 class FirebaseAuthFacade implements IAuthFacade {
-  final FirebaseAuth _firebaseAuth;
+  final fb.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
   const FirebaseAuthFacade(
@@ -32,7 +35,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       );
 
       return right(unit);
-    } on FirebaseAuthException catch (err) {
+    } on fb.FirebaseAuthException catch (err) {
       if (err.code == 'email-already-in-use') {
         return left(const AuthFailure.emailAlreadyInUse());
       } else {
@@ -54,7 +57,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       );
 
       return right(unit);
-    } on FirebaseAuthException catch (err) {
+    } on fb.FirebaseAuthException catch (err) {
       if (err.code == 'user-not-found' ||
           err.code == 'wrong-password' ||
           err.code == 'invalid-email') {
@@ -75,7 +78,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       }
 
       final googleAuthentication = await googleUser.authentication;
-      final authCredential = GoogleAuthProvider.credential(
+      final authCredential = fb.GoogleAuthProvider.credential(
         accessToken: googleAuthentication.accessToken,
         idToken: googleAuthentication.idToken,
       );
@@ -86,5 +89,20 @@ class FirebaseAuthFacade implements IAuthFacade {
     } on PlatformException catch (_) {
       return left(const AuthFailure.serverError());
     }
+  }
+
+  @override
+  Option<User> getSignedInUser() {
+    return optionOf(
+      _firebaseAuth.currentUser?.toDomain(),
+    );
+  }
+
+  @override
+  Future<void> signOut() {
+    return Future.wait([
+      _googleSignIn.signOut(),
+      _firebaseAuth.signOut(),
+    ]);
   }
 }

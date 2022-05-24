@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:ddd/domain/auth/i_auth_facade.dart';
 import 'package:ddd/domain/auth/user.dart';
 import 'package:ddd/domain/auth/value_objects.dart';
-import 'package:ddd/domain/core/value_objects.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';

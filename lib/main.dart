@@ -9,5 +9,5 @@ void main() async {
   await Firebase.initializeApp();
   configureInjection(Environment.prod);
 
-  runApp(const AppWidget());
+  runApp(AppWidget());
 }

@@ -4,6 +4,7 @@ import 'package:ddd/domain/core/value_objects.dart';
 import 'package:ddd/domain/core/value_transformers.dart';
 import 'package:ddd/domain/core/value_validators.dart';
 import 'package:flutter/rendering.dart';
+import 'package:kt_dart/kt.dart';
 
 class NoteBody extends ValueObject<String> {
   @override
@@ -56,19 +57,19 @@ class NoteColor extends ValueObject<Color> {
   const NoteColor._(this.value);
 }
 
-class List3<T> extends ValueObject<IList<T>> {
+class List3<T> extends ValueObject<KtList<T>> {
   @override
-  final Either<ValueFailure<IList<T>>, IList<T>> value;
+  final Either<ValueFailure<KtList<T>>, KtList<T>> value;
 
   static const maxLength = 3;
 
-  factory List3(IList<T> input) => List3._(
+  factory List3(KtList<T> input) => List3._(
         validateMaxListLength(input, 3),
       );
 
   const List3._(this.value);
 
-  int get length => value.getOrElse(() => IList.from([])).length();
+  int get length => value.getOrElse(() => emptyList()).size;
 
   bool get isFull => length == maxLength;
 }

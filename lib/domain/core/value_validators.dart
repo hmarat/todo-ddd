@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ddd/domain/core/failures.dart';
+import 'package:kt_dart/kt.dart';
 
 Either<ValueFailure<String>, String> validateStringMaxLength(
     String input, int maxLength) {
@@ -30,9 +31,9 @@ Either<ValueFailure<String>, String> validateSingleLine(String input) {
   }
 }
 
-Either<ValueFailure<IList<T>>, IList<T>> validateMaxListLength<T>(
-    IList<T> list, int maxLength) {
-  if (list.length() <= maxLength) {
+Either<ValueFailure<KtList<T>>, KtList<T>> validateMaxListLength<T>(
+    KtList<T> list, int maxLength) {
+  if (list.size <= maxLength) {
     return right(list);
   } else {
     return left(

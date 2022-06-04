@@ -10,13 +10,15 @@ part 'note.freezed.dart';
 
 @freezed
 @immutable
-abstract class Note with _$Note {
+abstract class Note implements _$Note {
   const factory Note({
     required UniqueId id,
     required NoteBody body,
     required NoteColor color,
     required List3<TodoItem> todos,
   }) = _Note;
+
+  const Note._();
 
   factory Note.empty() => Note(
         id: UniqueId(),
